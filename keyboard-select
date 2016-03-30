@@ -42,6 +42,8 @@ sub on_start{
 	$self->{patterns}{'e'} = qr/[^\w\s](?=\w)|\w(?=\W)|\S(?=\s|$)/;
 	$self->{patterns}{'E'} = qr/\S(?=\s|$)/;
 
+        $self->{to_clipboard} = $self->x_resource_boolean("%.to_clipboard");
+
 	()
 }
 
@@ -603,4 +605,16 @@ sub calc_span {
 	}
 
 	return ($br, $bc, $er, $ec);
+}
+
+sub on_sel_grab {
+	my ($self, $time) = @_;
+
+	if ($self->{active} eq 1 && $self->{to_clipboard}) {
+
+	$self->selection ($self->selection, 1);
+	$self->selection_grab ($time, 1);
+
+	()
+	}
 }
